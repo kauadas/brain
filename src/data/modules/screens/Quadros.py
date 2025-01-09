@@ -10,52 +10,13 @@ from kivy.uix.scrollview import ScrollView
 from kivy.graphics import *
 
 from ..widgets.quadro import Quadro
-from ..utils import types, BarraNavegacao
+from ..utils import types, BarraNavegacao, load_quadro, salvar_quadro
 
 
 import json
 import os
 
 
-def salvar_quadro(filename: str, quadro):
-    """
-    salva o quadro em um arquivo json
-
-    filename: str
-    quadro: Quadro
-    """
-
-    data = {"widgets": {},
-            "size": quadro.layout.size}
-    for i,item in enumerate(quadro.layout.children):
-        
-        data["widgets"][str(type(item).__name__)+str(i)] = item.to_json()
-
-    with open("data/json/quadros/"+filename+".json",'w') as file:
-        json.dump(data,file,indent=4)
-
-    
-
-def load_quadro(filename: str,quadro: Quadro):
-    """
-    carrega o quadro de um arquivo json
-    """
-
-
-    with open("data/json/quadros/"+filename+".json") as file:
-        data = json.load(file)
-
-    quadro.layout.clear_widgets()
-
-    for i in data["widgets"]:
-        print(data["widgets"][i])
-        item = types[data["widgets"][i]['type']](size_hint=(None,None))
-        item.from_json(data["widgets"][i])
-        quadro.layout.add_widget(item)
-        print(item)
-
-    quadro.layout.size = data["size"]
-    
 
 class Quadros(Screen):
     """
@@ -63,7 +24,6 @@ class Quadros(Screen):
     """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
         # layout onde todas as coisas vão ficar
         self.supra_layout = BoxLayout(orientation='vertical')
         self.add_widget(self.supra_layout)

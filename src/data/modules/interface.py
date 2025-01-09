@@ -22,7 +22,8 @@ class Aplicativo(App):
         self.title = "anti-acomodação"
         janelas = Janelas()
         janelas.add_widget(JanelaPrincipal(name='principal'))
-        janelas.add_widget(Quadros(name='quadros'))
+        self.quadros = Quadros(name='quadros')
+        janelas.add_widget(self.quadros)
 
         return janelas
     

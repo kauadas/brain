@@ -9,8 +9,6 @@ print(file.parent)
 if not path.exists("data/json/quadros"):
     mkdir("data/json/quadros")
 
-if not path.exists("data/json/configs"):
-    mkdir("data/json/configs")
 
 if __name__ == '__main__':
     app = Aplicativo()
