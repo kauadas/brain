@@ -7,6 +7,7 @@ from kivy.uix.button import Button
 from data.modules.utils import BarraNavegacao, set_quadro
 
 from PIL import Image
+import os
 
 import json
 
@@ -57,16 +58,17 @@ class JanelaPrincipal(Screen):
         with open('data/json/configs/configs.json') as f:
             configs = json.load(f)
             for quadro in configs['ultimos-5-quadros']:
-                print(quadro)
-                image = f"data/png/quadros/{quadro}.png"
-                image_pil = Image.open(image)
-                width_of_image = self.carrossel.height / image_pil.size[1] * image_pil.size[0]
+                if os.path.isfile(f"data/png/quadros/{quadro}.png") and os.path.isfile(f"data/json/quadros/{quadro}.json"):
+                    print(quadro)
+                    image = f"data/png/quadros/{quadro}.png"
+                    image_pil = Image.open(image)
+                    width_of_image = self.carrossel.height / image_pil.size[1] * image_pil.size[0]
 
-                quadro = Button(size_hint=(None, 1), text=quadro, background_normal=image, background_down=image,width=width_of_image)
-                self.carrossel_layout.width += width_of_image+self.carrossel_layout.spacing[0]
-                
-                self.carrossel_layout.add_widget(quadro)
+                    quadro = Button(size_hint=(None, 1), text=quadro, background_normal=image, background_down=image,width=width_of_image)
+                    self.carrossel_layout.width += width_of_image+self.carrossel_layout.spacing[0]
+                    
+                    self.carrossel_layout.add_widget(quadro)
 
-                quadro.on_press = lambda quadro = quadro: set_quadro(quadro.text)
+                    quadro.on_press = lambda quadro = quadro: set_quadro(quadro.text)
 
         

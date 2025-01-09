@@ -146,7 +146,6 @@ def load_quadro(filename: str,quadro):
     
 
 
-
 def set_quadro(quadro: str):
     """
     seta o quadro atual.
