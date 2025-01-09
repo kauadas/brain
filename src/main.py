@@ -4,6 +4,7 @@ from os import chdir, path, mkdir
 
 file = Path(__file__)
 chdir(file.parent)
+print(file.parent)
 
 if not path.exists("data/json/quadros"):
     mkdir("data/json/quadros")
