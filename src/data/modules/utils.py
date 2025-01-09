@@ -153,8 +153,9 @@ def set_quadro(quadro: str):
 
     """
 
-    quadro_obj =App.get_running_app().quadros.quadro
+    quadros = App.get_running_app().quadros
+    quadro_obj =quadros.quadro
 
     load_quadro(quadro,quadro_obj)
 
-    App.get_running_app().root.current = "quadros"
+    App.get_running_app().root.current = quadros.name
