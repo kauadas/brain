@@ -33,3 +33,6 @@ abra o terminal/cmd e digite:
 ```
     python main.py
 ```
+
+caso tenha problemas ao executar o arquivo tente usar:
+    **python3 main.py** ao inves de python main.py
