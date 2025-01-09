@@ -6,8 +6,15 @@ acesse o site https://www.python.org/downloads/ ou a microsoft store, e instale 
 # certifique-se de ter o pip instalado para gerenciar as bibliotecas necessarias:
 
 abra o terminal/cmd e digite:
-
+```
 py -3 -m ensurepip
+```
+
+caso haja problemas ao instalar o pip tente usar:
+
+```
+python -m ensurepip
+```
 
 # instale as bibliotecas necessarias:
 
@@ -23,4 +30,6 @@ caso tenha problemas ao instalar qualquer pacote tente usar:
 # e por fim execute o arquivo main.py
 
 abra o terminal/cmd e digite:
+```
     python main.py
+```
