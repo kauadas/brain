@@ -23,7 +23,7 @@ Os quadros tem um tamanho padrão de 4000x4000, mas pode ser expandido clicando 
 
 você pode movimentar livremente o quadro, clicando e arrastando o mouse em qualquer região vazia do quadro.
 
-os items no quadro podem ser movimentados usando o mouse, clicando no botão **>** e arrastando o item, os items podem ser removidos clicando no botão **x**.
+os items no quadro podem ser movimentados usando o mouse, clicando no botão [**>**] e arrastando o item, os items podem ser removidos clicando no botão [**x**].
 
-clicando no botão **|** e arrastando o mouse, você poderá alterar o tamanho do item.
+clicando no botão [**|**] e arrastando o mouse, você poderá alterar o tamanho do item.
 
