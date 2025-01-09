@@ -77,8 +77,8 @@ class Quadros(Screen):
         self.supra_layout.add_widget(self.buttons)
 
         self.list_buttons = {"Salvar": self.save,"Carregar": self.load,
-                             "add": self.add_item,"clear": self.clear,
-                             "center": self.go_center}
+                             "adicionar": self.add_item,"limpar": self.clear,
+                             "centralizar": self.go_center}
         
         for text,function in self.list_buttons.items():
             button = Button(text=text,size_hint=(0.2,1))
