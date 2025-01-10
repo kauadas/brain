@@ -11,9 +11,12 @@ from kivy.graphics import *
 
 
 class Quadro(Widget):
+    """Quadro onde o usuário poderá visualizar os seus widgets em uma pagina customizavel."""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
+        # scroll view do quadro para poder se movimentar pelo quadro.
         self.scroll = ScrollView(size_hint=(1,1),do_scroll_x=True,do_scroll_y=True,always_overscroll=False)
         self.page_size = 1000
         self.layout = FloatLayout(size_hint=(None,None),size=(4000,4000))
@@ -22,6 +25,7 @@ class Quadro(Widget):
         self.add_widget(self.scroll)
 
         
+        # botões para aumentar o tamanho do quadro
         self.plus_h = Button(text="+",size_hint=(None,None),
             pos_hint={'x':0.5,'top': 1})
         self.plus_h.bind(on_press=self.on_plus_height)
@@ -67,6 +71,8 @@ class Quadro(Widget):
 
     def on_plus_height(self,*args):
         self.layout.height += self.page_size
+
+        # conserva a posição y de todos os widgets
         for i in self.layout.children:
             i.y += self.page_size
 

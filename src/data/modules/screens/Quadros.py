@@ -12,8 +12,6 @@ from kivy.graphics import *
 from ..widgets.quadro import Quadro
 from ..utils import types, BarraNavegacao, load_quadro, salvar_quadro
 
-
-import json
 import os
 
 
@@ -39,12 +37,8 @@ class Quadros(Screen):
         self.list_buttons = {"Salvar": self.save,"Carregar": self.load,
                              "adicionar": self.add_item,"limpar": self.clear,
                              "centralizar": self.go_center}
-        
-        for text,function in self.list_buttons.items():
-            button = Button(text=text,size_hint=(0.2,1))
-            button.on_press = function
-            self.buttons.add_widget(button)
 
+        self.load_buttons()
         
         
         # quadro
@@ -74,6 +68,13 @@ class Quadros(Screen):
         
         popup.open()
 
+    def load_buttons(self,*args):
+        self.buttons.clear_widgets()
+        for text,function in self.list_buttons.items():
+            button = Button(text=text,size_hint=(0.2,1))
+            button.on_press = function
+            self.buttons.add_widget(button)
+
     def load(self,*args):
         """
         abre um pop-up onde o usuário pode escolher um quadro para carregar.
@@ -81,6 +82,7 @@ class Quadros(Screen):
         """
         
         popup = Popup(title="Carregar",size_hint=(None,None),size=(400,400))
+        
         layout = BoxLayout(orientation='vertical')
         popup.add_widget(layout)
 
@@ -112,6 +114,7 @@ class Quadros(Screen):
         
         self.quadro.layout.clear_widgets()
         self.quadro.layout.size = (4000,4000)
+        self.go_center()
 
     def add_item(self,*args):
         """abre um pop-up onde o usuário pode escolher um widget para adicionar ao quadro."""

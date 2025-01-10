@@ -60,11 +60,25 @@ class BarraNavegacao(BoxLayout):
 
 import os
 
+def create_config():
+    """cria o arquivo de config do aplicativo"""
+
+    # data do arquivo config.
+    config_data = {"ultimos-5-quadros":[]}
+
+    if not os.path.exists("data/json/configs"):
+        os.mkdir("data/json/configs")
+    if not os.path.exists("data/json/configs/configs.json"):
+        with open("data/json/configs/configs.json","w") as file:
+            json.dump(config_data,file,indent=4)
+            file.close()
+
 def add_quadro_to_list(quadro_name: str):
     """
     adiciona um quadro ao list de quadros recentes
     """
 
+    create_config()
     with open("data/json/configs/configs.json") as file:
         data = json.load(file)
         file.close()
@@ -116,14 +130,16 @@ def salvar_quadro(filename: str, quadro):
 
     quadro_para_imagem(filename,quadro)
 
-    
-
 import json
 
 def load_quadro(filename: str,quadro):
     """
     carrega o quadro de um arquivo json
     """
+
+    if not os.path.exists("data/json/configs/configs.json"):
+        with open("data/json/configs/configs.json","w") as file:
+            json.dump({"ultimos-5-quadros":[]},file,indent=4)
 
     with open("data/json/quadros/"+filename+".json") as file:
         data = json.load(file)
