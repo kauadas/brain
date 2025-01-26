@@ -1,6 +1,6 @@
 from .floatwidget import FloatWidget
-from data.modules.widgets.markdown import Markdown
-from data.modules.widgets.checklist import Checklist
+from .widgets.markdown import Markdown
+from .widgets.checklist import Checklist
 
 
 types = {
@@ -11,6 +11,8 @@ types = {
 
 
 from kivy.uix.button import Button
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics import *
@@ -174,3 +176,20 @@ def set_quadro(quadro: str):
     load_quadro(quadro,quadro_obj)
 
     App.get_running_app().root.current = quadros.name
+
+
+class ErrorPopup(Popup):
+    def __init__(self, text, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.box = BoxLayout(orientation="vertical")
+        self.add_widget(self.box)
+        self.label = Label(text=text)
+        self.box.add_widget(self.label)
+        self.title = "Error"
+        self.size_hint = (0.4,0.4)
+        self.button = Button(text="OK")
+        self.button.on_press = self.dismiss
+        self.box.add_widget(self.button)
+
+        self.open()
+

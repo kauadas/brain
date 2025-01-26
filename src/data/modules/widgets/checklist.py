@@ -114,6 +114,7 @@ class Checklist(FloatWidget):
     def reset_itens(self):
         for item in self.itens.values():
             item.check._set_active(False)
+            
 
 
     def to_json(self):

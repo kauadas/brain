@@ -21,10 +21,11 @@ class Markdown(FloatWidget):
         self.rst = RstDocument(pos_hint={'x': 0, 'y': 0})
         
         self.rst.colors = {"paragraph": "#33ff33","background": "#000000"}
+
         self.text = ""
         self.content.add_widget(self.rst)
 
-        self.edit_button = Button(text="edit",pos_hint={'x': 5/6, 'y': 0},size_hint=(1/6,1/6))
+        self.edit_button = Button(text="edit",pos_hint={'x': 4/6, 'y': -1/6},size_hint=(2/6,1/6))
         self.edit_button.on_press = self.on_edit
         self.content.add_widget(self.edit_button)
 

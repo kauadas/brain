@@ -3,48 +3,122 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.stacklayout import StackLayout
-from kivy.core.window import Window
 
+from kivy.core.window import Window
+from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
+
+from .code_widget import Code, ErrorPopup
+
+
+
+class Bar(StackLayout):
+    def __init__(self,parent_widget, **kwargs):
+        super().__init__(**kwargs)
+        self.parent_widget = parent_widget
+        self.orientation = 'lr-tb'
+        self.size_hint = (None,None)
+        self.size_base = [1,0.1]
+        size_button = 1/6
+        self.move_center = [3.5*size_button,1+size_button/2]
+
+        self.title = Label(text="floatwidget",size_hint=(2*size_button,1))
+        self.add_widget(self.title)
+
+        Button_remove = Button(text='X',size_hint=(size_button,1))
+        Button_remove.on_press = self.parent_widget.on_remove
+
+        Button_move = Button(text='>',size_hint=(size_button,1))
+        Button_move.on_press = lambda *args : self.parent_widget.set_move(True)
+        Button_move.on_release = lambda *args : self.parent_widget.set_move(False)
+
+        Button_resize = Button(text='|',size_hint=(size_button,1))
+        Button_resize.on_press = self.parent_widget.on_start_resize
+        Button_resize.on_release = self.parent_widget.on_stop_resize
+
+        Button_code = Button(text='code',size_hint=(size_button,1))
+        Button_code.on_press = self.parent_widget.code.open
+
+        self.add_widget(Button_remove)
+        self.add_widget(Button_move)
+        self.add_widget(Button_resize)
+        self.add_widget(Button_code)
+        
+
+
+    def update(self):
+        self.pos = self.parent_widget.pos[0], self.parent_widget.pos[1]+self.parent_widget.height
+
+        self.size = [x*i for x,i in zip(self.parent_widget.size,self.size_base)]
+        
+       
+class CodeUi(Code):
+    def __init__(self, parent_widget,**kwargs):
+        super().__init__(**kwargs)
+        self.parent_widget = parent_widget
+        
+        self.on_dismiss = self.start_event_code
+
+    def start_event_code(self):
+        print("set event",self.code)
+        self.parent_widget.event = Clock.schedule_interval(self.run_code, self.time_trigger)
+
+    def open(self):
+        super().open()
+        if self.parent_widget.event:
+            self.parent_widget.event.cancel()
+
+        
+
+    def run_code(self,*args):
+        
+        try:
+            exec_globals = {"self":self.parent_widget}
+            exec_locals = {}
+            exec(self.code,exec_globals,exec_locals)
+
+        except Exception as e:
+            ErrorPopup("Error running code: "+str(e))
+            self.stop_event()
+
+    def stop_event(self):
+        if self.parent_widget.event:
+            self.parent_widget.event.cancel()
+
+            self.parent_widget.event = None
+
 
 class FloatWidget(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.title = Label(text="floatwidget",size_hint=(2/5,1))
-        
 
-        self.barra = StackLayout(orientation='lr-tb',pos=(self.pos[0],self.top),size_hint=(1,0.1))
-        self.add_widget(self.barra)
-        Button_remove = Button(text='X',size_hint=(1/5,1))
-        Button_remove.on_press = self.on_remove
+        # widgets
+        self.code = CodeUi(self)
 
-        Button_move = Button(text='>',size_hint=(1/5,1))
-        Button_move.on_press = self.on_move
-        Button_move.on_release = self.on_stop
-
-        button_resize = Button(text='|',size_hint=(1/5,1),pos=(self.right,self.y))
-        button_resize.on_press = self.on_start_resize
-        button_resize.on_release = self.on_stop_resize
-
-        self.barra.add_widget(Button_remove)
-        self.barra.add_widget(Button_move)
-
-        self.barra.add_widget(self.title)
-        self.barra.add_widget(button_resize)
+        self.barra = Bar(self)
 
         self.content = FloatLayout(pos=self.pos)
 
+        self.content.add_widget(self.barra)
         self.add_widget(self.content)
         
+        # vars
+        self.move = False
+        self.resize = False
+
+        # functions calls
+
         self.style()
+        
 
         self.bind(size=self.on_update, pos=self.on_update)
         self.on_update()
 
-        self.move = False
-        self.resize = False
+        # executar codigo 
+        self.event = None
 
     def style(self):
+        self.canvas.before.clear()
         with self.canvas.before:
             Color(0.2, 0.2, 0.2, 1)
             self.rect_0 = Rectangle(pos=self.pos, size=self.size)
@@ -52,31 +126,26 @@ class FloatWidget(Widget):
             self.rect_1 = Rectangle(pos=self.barra.pos, size=self.barra.size)
 
     def on_update(self, *args):
-        W_size = Window.size
-        self.barra.size = self.size[0],self.size[1]*0.1
-        self.barra.pos = self.x,self.y+self.size[1]
-        self.content.size = self.size[0],self.size[1]*0.9
+
+        self.barra.update()
         self.content.pos = self.pos
-
-        self.rect_0.size = self.content.size
-        self.rect_0.pos = self.content.pos
-
-        self.rect_1.size = self.barra.size
-        self.rect_1.pos = self.barra.pos
+        self.content.size = self.size
+        self.style()
 
         
 
-    def on_move(self, *args):
-        self.move = True
-
-    def on_stop(self, *args):
-        self.move = False
+    def set_move(self,value: bool,*args):
+        self.move = value
 
     def on_touch_move(self, touch):
-        W_size = Window.size
+        
+        # movimentação
         if self.move:
             x,y = touch.pos
-            x,y = x-self.size[0]*1.5/4,y-self.height*1.05
+
+            move_center = self.barra.move_center
+            x,y = x-self.size[0]*move_center[0],y-self.size[1]*move_center[1]
+
             final_x, final_y = self.x,self.y
             if x > self.parent.x and x+self.size[0] < self.parent.right:
                 final_x = x
@@ -118,11 +187,18 @@ class FloatWidget(Widget):
         self.resize = False
 
     def to_json(self):
-        return {"type":"floatwidget","pos":self.pos,"size":self.size}
+        return {"type":"floatwidget","pos":self.pos,"size":self.size,"code": (self.code.code,self.code.time_trigger)}
     
     def from_json(self,data):
         self.pos = data["pos"]
         self.size = data["size"]
+        self.code.code = data["code"][0]
+        self.code.code_input.text = data["code"][0]
+        self.code.time_trigger = data["code"][1]
+        self.code.time_input.text = str(data["code"][1])
+        self.code.start_event_code()
     
     def set_title(self,title):
-        self.title.text = title
+        self.barra.title.text = title
+
+
