@@ -1,4 +1,4 @@
-from ..floatwidget import FloatWidget
+from ..widgets.floatwidget import FloatWidget
 
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.label import Label

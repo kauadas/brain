@@ -4,7 +4,7 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 
-from data.modules.utils import BarraNavegacao, set_quadro, get_file_path
+from data.modules.utils import BarraNavegacao, set_canvas, get_file_path
 
 from PIL import Image
 import os
@@ -27,19 +27,19 @@ class Carrossel(ScrollView):
         canvas = json.load(open(get_file_path("configs","configs.json")))["last-five-canvas"]
         return canvas
         
-    def load_quadros(self):
+    def load_canvas(self):
         self.layout.clear_widgets()
-        quadros = self.get_quadros()
+        canvas = self.get_canvas()
 
-        for quadro in quadros:
-            print(quadro)
-            preview = get_file_path("quadros_images",quadro+".png")
+        for canva in canvas:
+            print(canva)
+            preview = get_file_path("canvas_images",canva+".png")
 
             size = Image.open(preview).size
             width = self.height/size[1] * size[0]
-            button = Button(text=quadro,size_hint=(None,1),width=width)
+            button = Button(text=canva,size_hint=(None,1),width=width)
             button.background_normal = preview
-            button.on_press = lambda x=quadro: set_quadro(x)
+            button.on_press = lambda x=canva: set_canvas(x)
             self.layout.add_widget(button)
 
             self.layout.width += width + self.layout.spacing[0]
@@ -70,7 +70,7 @@ class JanelaPrincipal(Screen):
         self.carrossel = Carrossel(pos_hint={"x": 0,"center_y": 0.5})
         self.add_widget(self.carrossel)
 
-        self.on_pre_enter = self.carrossel.load_quadros
+        self.on_pre_enter = self.carrossel.load_canvas
 
 
         self.bind(size=self.on_update, pos=self.on_update)

@@ -1,7 +1,5 @@
-from .floatwidget import FloatWidget
-from .widgets.markdown import Markdown
-from .widgets.checklist import Checklist
-
+from .widgets.floatwidget import FloatWidget
+from .canvas_widgets import types
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
@@ -32,7 +30,7 @@ class BarraNavegacao(BoxLayout):
 
         Main_window = self.button('Principal', 'principal')
 
-        Canvas_window = self.button('Quadros', 'quadros')
+        Canvas_window = self.button('Canvas', 'canvas')
         
         
 
@@ -56,18 +54,12 @@ class BarraNavegacao(BoxLayout):
     def go_to(self,name,*args):
         App.get_running_app().root.current = name
 
-types = {
-        'floatwidget': FloatWidget,
-        'markdown': Markdown,
-        'checklist': Checklist
-    }
-
 
 paths = {
     "images": "./data/images/",
     "canvas_images": "./data/images/canvas/",
     "json": "./data/json/",
-    "canvas": "./data/json/canvas/",
+    "canvas": "./data/json/saves/",
     "configs": "./data/json/configs/",
     
 }
@@ -92,7 +84,7 @@ def create_config():
 
 def delete_canvas(name: str):
     """
-    deleta um quadro
+    deleta um canva
     """
     
     os.remove(get_file_path("canvas",name+".json"))
@@ -108,7 +100,7 @@ def delete_canvas(name: str):
 
 def add_canvas_to_list(name: str):
     """
-    adiciona um quadro ao list de quadros recentes
+    adiciona um canva ao list de canvas recentes
     """
 
     #create_config()
@@ -135,7 +127,7 @@ def add_canvas_to_list(name: str):
 
 def canvas_to_image(filename: str,canvas):
     """
-    cria uma imagem com o quadro
+    cria uma imagem com o canva
     """
     
     path = get_file_path("canvas_images",filename+".png")
@@ -150,10 +142,10 @@ def canvas_to_image(filename: str,canvas):
 
 def save_canvas(filename: str, canvas):
     """
-    salva o quadro em um arquivo json
+    salva o canva em um arquivo json
 
     filename: str
-    quadro: Quadro
+    canva: Canva
     """
 
     data = {"widgets": {},
@@ -173,7 +165,7 @@ import json
 
 def load_canvas(filename: str,canvas):
     """
-    carrega o quadro de um arquivo json
+    carrega o canva de um arquivo json
     """
     path = get_file_path("canvas",filename+".json")
     with open(path) as file:
@@ -197,16 +189,16 @@ def load_canvas(filename: str,canvas):
     
 
 
-def set_canvas(canvas: str):
+def set_canvas(canvas_name: str):
     """
-    seta o quadro atual.
+    seta o canva atual.
 
     """
 
     window = App.get_running_app().canvas_window
     canvas = window.canvas_layout
 
-    load_canvas(canvas,canvas)
+    load_canvas(canvas_name,canvas)
 
     App.get_running_app().root.current = window.name
 
