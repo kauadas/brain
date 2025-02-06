@@ -4,7 +4,6 @@ from kivy.uix.label import Label
 from kivy.uix.codeinput import CodeInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
-from pygments.lexers.python import Python3Lexer
 
 
 class Code(Popup):

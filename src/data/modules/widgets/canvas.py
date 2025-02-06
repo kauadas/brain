@@ -9,8 +9,8 @@ from kivy.uix.widget import Widget
 
 from kivy.graphics import *
 
-
-class Quadro(Widget):
+2
+class Canvas(Widget):
     """Quadro onde o usuário poderá visualizar os seus widgets em uma pagina customizavel."""
 
     def __init__(self, **kwargs):

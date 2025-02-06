@@ -2,20 +2,16 @@ from .floatwidget import FloatWidget
 from .widgets.markdown import Markdown
 from .widgets.checklist import Checklist
 
-
-types = {
-        'floatwidget': FloatWidget,
-        'markdown': Markdown,
-        'checklist': Checklist
-    }
-
-
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics import *
+
+from PIL import Image
+
+import os
 
 class BarraNavegacao(BoxLayout):
     """
@@ -34,9 +30,9 @@ class BarraNavegacao(BoxLayout):
 
         self.on_update()
 
-        Principal = self.button('Principal', 'principal')
+        Main_window = self.button('Principal', 'principal')
 
-        Quadros = self.button('Quadros', 'quadros')
+        Canvas_window = self.button('Quadros', 'quadros')
         
         
 
@@ -60,58 +56,99 @@ class BarraNavegacao(BoxLayout):
     def go_to(self,name,*args):
         App.get_running_app().root.current = name
 
-import os
+types = {
+        'floatwidget': FloatWidget,
+        'markdown': Markdown,
+        'checklist': Checklist
+    }
+
+
+paths = {
+    "images": "./data/images/",
+    "canvas_images": "./data/images/canvas/",
+    "json": "./data/json/",
+    "canvas": "./data/json/canvas/",
+    "configs": "./data/json/configs/",
+    
+}
+
+
+def get_file_path(path: str, filename: str = ""):
+    
+    return paths[path] + "/" + filename
+
+
+config_path = get_file_path("configs","configs.json")
 
 def create_config():
     """cria o arquivo de config do aplicativo"""
 
     # data do arquivo config.
-    config_data = {"ultimos-5-quadros":[]}
+    config_data = {"last-five-canvas":[]}
 
-    if not os.path.exists("data/json/configs"):
-        os.mkdir("data/json/configs")
-    if not os.path.exists("data/json/configs/configs.json"):
-        with open("data/json/configs/configs.json","w") as file:
-            json.dump(config_data,file,indent=4)
+    with open(config_path,"w") as file:
+        json.dump(config_data,file,indent=4)
+        file.close()
+
+def delete_canvas(name: str):
+    """
+    deleta um quadro
+    """
+    
+    os.remove(get_file_path("canvas",name+".json"))
+    os.remove(get_file_path("canvas_images",name+".png"))
+
+    data = json.load(open(config_path))
+    if name in data["last-five-canvas"]:
+        data["last-five-canvas"].remove(name)
+        with open(config_path,"w") as file:
+            json.dump(data,file,indent=4)
             file.close()
+    
 
-def add_quadro_to_list(quadro_name: str):
+def add_canvas_to_list(name: str):
     """
     adiciona um quadro ao list de quadros recentes
     """
 
-    create_config()
-    with open("data/json/configs/configs.json") as file:
+    #create_config()
+    print(name)
+    with open(config_path) as file:
         data = json.load(file)
         file.close()
 
-    if quadro_name in data["ultimos-5-quadros"]:
-        data["ultimos-5-quadros"].remove(quadro_name)
+    last_canvas = data["last-five-canvas"]
 
-    data["ultimos-5-quadros"].insert(0,quadro_name)
+    if name in last_canvas:
+        print("removing", name)
+        last_canvas.remove(name)
 
-    if len(data["ultimos-5-quadros"]) > 5:
-        data["ultimos-5-quadros"].pop()
+    last_canvas.insert(0,name)
 
-    with open("data/json/configs/configs.json","w") as file:
+    if len(last_canvas) > 5:
+        print("removing the last element of list.")
+        last_canvas.pop()
+
+    with open(config_path,"w") as file:
         json.dump(data,file,indent=4)
         file.close()
 
-def quadro_para_imagem(filename: str,quadro):
+def canvas_to_image(filename: str,canvas):
     """
     cria uma imagem com o quadro
     """
     
-    if not os.path.exists("data/png/"):
-        os.mkdir("data/png/")
-    
-    if not os.path.exists("data/png/quadros"):
-        os.mkdir("data/png/quadros")
+    path = get_file_path("canvas_images",filename+".png")
 
-    quadro.export_to_png("data/png/quadros/"+filename+".png")
+    canvas.export_to_png(path)
+
+    image = Image.open(path)
+    image = image.crop((0,0,800,545))
+
+    image.save(path)
 
 
-def salvar_quadro(filename: str, quadro):
+def save_canvas(filename: str, canvas):
     """
     salva o quadro em um arquivo json
 
@@ -120,62 +157,58 @@ def salvar_quadro(filename: str, quadro):
     """
 
     data = {"widgets": {},
-            "size": quadro.layout.size}
-    for i,item in enumerate(quadro.layout.children):
+            "size": canvas.layout.size}
+    for i,item in enumerate(canvas.layout.children):
         
         data["widgets"][str(type(item).__name__)+str(i)] = item.to_json()
 
-    with open("data/json/quadros/"+filename+".json",'w') as file:
+    with open(get_file_path("canvas",filename+".json"),'w') as file:
         json.dump(data,file,indent=4)
 
-    add_quadro_to_list(filename)
+    add_canvas_to_list(filename)
 
-    quadro_para_imagem(filename,quadro)
+    canvas_to_image(filename,canvas)
 
 import json
 
-def load_quadro(filename: str,quadro):
+def load_canvas(filename: str,canvas):
     """
     carrega o quadro de um arquivo json
     """
-
-    if not os.path.exists("data/json/configs/configs.json"):
-        with open("data/json/configs/configs.json","w") as file:
-            json.dump({"ultimos-5-quadros":[]},file,indent=4)
-
-    with open("data/json/quadros/"+filename+".json") as file:
+    path = get_file_path("canvas",filename+".json")
+    with open(path) as file:
         data = json.load(file)
 
-    quadro.layout.clear_widgets()
+    canvas.layout.clear_widgets()
 
     for i in data["widgets"]:
-        print(data["widgets"][i])
+        print("loading",data["widgets"][i])
         item = types[data["widgets"][i]['type']](size_hint=(None,None))
         item.from_json(data["widgets"][i])
-        quadro.layout.add_widget(item)
+        canvas.layout.add_widget(item)
         print(item)
 
-    quadro.layout.size = data["size"]
+    canvas.layout.size = data["size"]
 
-    add_quadro_to_list(filename)
+    add_canvas_to_list(filename)
 
-    quadro.scroll.scroll_x = 0.5
-    quadro.scroll.scroll_y = 0.5
+    canvas.scroll.scroll_x = 0.5
+    canvas.scroll.scroll_y = 0.5
     
 
 
-def set_quadro(quadro: str):
+def set_canvas(canvas: str):
     """
     seta o quadro atual.
 
     """
 
-    quadros = App.get_running_app().quadros
-    quadro_obj =quadros.quadro
+    window = App.get_running_app().canvas_window
+    canvas = window.canvas_layout
 
-    load_quadro(quadro,quadro_obj)
+    load_canvas(canvas,canvas)
 
-    App.get_running_app().root.current = quadros.name
+    App.get_running_app().root.current = window.name
 
 
 class ErrorPopup(Popup):

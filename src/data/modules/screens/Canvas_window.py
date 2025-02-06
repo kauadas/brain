@@ -9,14 +9,15 @@ from kivy.uix.scrollview import ScrollView
 
 from kivy.graphics import *
 
-from ..widgets.quadro import Quadro
-from ..utils import types, BarraNavegacao, load_quadro, salvar_quadro
+from ..widgets.canvas import Canvas
+from ..utils import types, BarraNavegacao, load_canvas, save_canvas, get_file_path
 
 import os
 
 
 
-class Quadros(Screen):
+
+class CanvasWindow(Screen):
     """
     quadro onde o usuário poderá visualizar os seus widgets em uma pagina customizavel.
     """
@@ -42,8 +43,8 @@ class Quadros(Screen):
         
         
         # quadro
-        self.quadro = Quadro()
-        self.supra_layout.add_widget(self.quadro)
+        self.canvas_layout = Canvas()
+        self.supra_layout.add_widget(self.canvas_layout)
 
         
     def save(self,*args):
@@ -58,7 +59,7 @@ class Quadros(Screen):
         layout.add_widget(text_input)
 
         button = Button(text="salvar",size_hint=(1,0.1))
-        button.on_press = lambda: salvar_quadro(text_input.text,self.quadro)
+        button.on_press = lambda: save_canvas(text_input.text,self.canvas_layout)
         layout.add_widget(button)
 
         button_close = Button(text="close",size_hint=(1,0.1))
@@ -94,14 +95,14 @@ class Quadros(Screen):
         scroll.add_widget(scroll_layout)
         layout.add_widget(scroll)
 
-        quadros = os.listdir("data/json/quadros/")
-        for quadro in quadros:
-            quadro = quadro.replace(".json","")
-            button = Button(text=quadro,size_hint=(1,None),height=100)
-            button.on_press = lambda x=quadro: load_quadro(x,self.quadro)
+        canvas = os.listdir(get_file_path("canvas"))
+        for canva in canvas:
+            canva = canva.replace(".json","")
+            button = Button(text=canva,size_hint=(1,None),height=100)
+            button.on_press = lambda x=canva: load_canvas-(x,self.canvas_layout)
             scroll_layout.add_widget(button)
 
-        print(quadro)
+        print(canvas)
     
         button_close = Button(text="close",size_hint=(1,0.1))
         button_close.on_press = popup.dismiss
@@ -112,8 +113,8 @@ class Quadros(Screen):
     def clear(self,*args):
         """limpa o quadro atual e reseta o tamanho."""
         
-        self.quadro.layout.clear_widgets()
-        self.quadro.layout.size = (4000,4000)
+        self.canvas_layout.layout.clear_widgets()
+        self.canvas_layout.layout.size = (4000,4000)
         self.go_center()
 
     def add_item(self,*args):
@@ -133,8 +134,8 @@ class Quadros(Screen):
 
         for type,obj in types.items():
             button = Button(text=type,size_hint=(1,None),height=100)
-            pos = (self.quadro.layout.width*0.4,self.quadro.layout.height*0.4)
-            button.on_press = lambda x=obj: self.quadro.layout.add_widget(x(size_hint=(None,None),size=(400,400),pos=pos))
+            pos = (self.canvas_layout.layout.width*0.4,self.canvas_layout.layout.height*0.4)
+            button.on_press = lambda x=obj: self.canvas_layout.layout.add_widget(x(size_hint=(None,None),size=(400,400),pos=pos))
             scroll_layout.add_widget(button)
     
         button_close = Button(text="close",size_hint=(1,0.1))
@@ -146,5 +147,5 @@ class Quadros(Screen):
     def go_center(self,*args):
         """centraliza o quadro na tela."""
         
-        self.quadro.scroll.scroll_x = 0.5
-        self.quadro.scroll.scroll_y = 0.5
+        self.canvas_layout.scroll.scroll_x = 0.5
+        self.canvas_layout.scroll.scroll_y = 0.5

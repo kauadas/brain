@@ -170,10 +170,10 @@ class FloatWidget(Widget):
 
             self.size = final_w,final_h
 
-
     def on_touch_up(self, touch):
         if self.move:
             self.move = False
+            
         elif self.resize:
             self.resize = False
             

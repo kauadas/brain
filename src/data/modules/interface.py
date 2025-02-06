@@ -2,7 +2,7 @@ from kivy.app import App
 
 from kivy.uix.screenmanager import ScreenManager
 
-from .screens.Quadros import Quadros
+from .screens.Canvas_window import CanvasWindow
 from .screens.Principal import JanelaPrincipal
 
 
@@ -22,8 +22,8 @@ class Aplicativo(App):
         self.title = "anti-acomodação"
         janelas = Janelas()
         janelas.add_widget(JanelaPrincipal(name='principal'))
-        self.quadros = Quadros(name='quadros')
-        janelas.add_widget(self.quadros)
+        self.canvas_window = CanvasWindow(name='canvas')
+        janelas.add_widget(self.canvas_window)
 
         return janelas
     

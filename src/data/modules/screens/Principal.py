@@ -4,12 +4,48 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 
-from data.modules.utils import BarraNavegacao, set_quadro
+from data.modules.utils import BarraNavegacao, set_quadro, get_file_path
 
 from PIL import Image
 import os
 
 import json
+
+class Carrossel(ScrollView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.do_scroll_x = True
+        self.do_scroll_y = False
+        self.size_hint = (1,None)
+        self.height = 200
+
+        self.layout = StackLayout(orientation='lr-tb',pos_hint={'x':0,'y':0},size_hint=(None,1),spacing=40)
+        self.layout.width = 0
+        self.add_widget(self.layout)
+
+    def get_canvas(self):
+        canvas = json.load(open(get_file_path("configs","configs.json")))["last-five-canvas"]
+        return canvas
+        
+    def load_quadros(self):
+        self.layout.clear_widgets()
+        quadros = self.get_quadros()
+
+        for quadro in quadros:
+            print(quadro)
+            preview = get_file_path("quadros_images",quadro+".png")
+
+            size = Image.open(preview).size
+            width = self.height/size[1] * size[0]
+            button = Button(text=quadro,size_hint=(None,1),width=width)
+            button.background_normal = preview
+            button.on_press = lambda x=quadro: set_quadro(x)
+            self.layout.add_widget(button)
+
+            self.layout.width += width + self.layout.spacing[0]
+
+
+
 
 class JanelaPrincipal(Screen):
     """
@@ -31,16 +67,10 @@ class JanelaPrincipal(Screen):
 
         # carrossel
 
-        self.carrossel = ScrollView(size_hint=(1, None), pos_hint={'left': 0, 'top': 0.5}, do_scroll_x=True, do_scroll_y=False,
-                                    height=200)
+        self.carrossel = Carrossel(pos_hint={"x": 0,"center_y": 0.5})
         self.add_widget(self.carrossel)
 
-        self.carrossel_layout = StackLayout(size_hint=(None, 1), pos_hint={'left': 0, 'top': 0}, orientation='lr-tb',width=0,
-                                           spacing=20)
-        
-        self.carrossel_layout.bind(minimum_width=self.carrossel_layout.setter('width'))
-        self.carrossel.add_widget(self.carrossel_layout)
-
+        self.on_pre_enter = self.carrossel.load_quadros
 
 
         self.bind(size=self.on_update, pos=self.on_update)
@@ -51,24 +81,8 @@ class JanelaPrincipal(Screen):
 
     def on_update(self,*args):
         self.title.font_size = self.height * 0.05
+
         
-    def on_pre_enter(self, *args):
-        self.carrossel_layout.clear_widgets()
 
-        with open('data/json/configs/configs.json') as f:
-            configs = json.load(f)
-            for quadro in configs['ultimos-5-quadros']:
-                if os.path.isfile(f"data/png/quadros/{quadro}.png") and os.path.isfile(f"data/json/quadros/{quadro}.json"):
-                    print(quadro)
-                    image = f"data/png/quadros/{quadro}.png"
-                    image_pil = Image.open(image)
-                    width_of_image = self.carrossel.height / image_pil.size[1] * image_pil.size[0]
-
-                    quadro = Button(size_hint=(None, 1), text=quadro, background_normal=image, background_down=image,width=width_of_image)
-                    self.carrossel_layout.width += width_of_image+self.carrossel_layout.spacing[0]
-                    
-                    self.carrossel_layout.add_widget(quadro)
-
-                    quadro.on_press = lambda quadro = quadro: set_quadro(quadro.text)
 
         

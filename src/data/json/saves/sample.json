@@ -1,0 +1,53 @@
+{
+    "widgets": {
+        "Checklist0": {
+            "type": "checklist",
+            "pos": [
+                1490.9375,
+                1629.2675
+            ],
+            "size": [
+                325.5,
+                601.6500000000001
+            ],
+            "code": [
+                "import json\n\nfile = \"./data/json/atividades.json\"\ndata = json.load(open(file))\n\nfinal = 0\nfor item, obj in self.itens.items():\n\tif obj.check.active:\n\t\tfinal += 1\n\t\tdata[item] += 1\n\nif final/len(self.itens) > 0.7:\n\tjson.dump(data,open(file,\"w\"))\n\tself.reset_itens()",
+                1.0
+            ],
+            "itens": [
+                [
+                    false,
+                    "compras"
+                ],
+                [
+                    false,
+                    "academia"
+                ],
+                [
+                    false,
+                    "estudar"
+                ]
+            ]
+        },
+        "Markdown1": {
+            "type": "markdown",
+            "pos": [
+                1114.1014031304253,
+                1640.9452779079859
+            ],
+            "size": [
+                354.68330891927076,
+                706.2043588541669
+            ],
+            "code": [
+                "import json\ndata = open(\"./data/json/atividades.json\")\n\ntext = \"# tarefas\\n\"\nfor key, value in json.load(data).items():\n\ttext += f\"{key}: {value}\\n\\n\"\n\ntext += \"![image info](https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg)\"\n\nself.set_text(text)\n\n\n",
+                1.0
+            ],
+            "text": "# tarefas\nacademia: 11\n\ncompras: 11\n\nestudar: 11\n\n![image info](https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg)"
+        }
+    },
+    "size": [
+        4000,
+        4000
+    ]
+}
