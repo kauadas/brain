@@ -1,0 +1,35 @@
+name: Build Executable for windows with Nuitka
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+
+    steps:
+      - name: 📥 Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12.7"
+
+      - name: 📦 Instalar Dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install nuitka
+          pip install -r requirements.txt
+
+      - name: 🔨 Compilar com Nuitka
+        run: |
+          python -m nuitka --standalone --onefile --enable-console --include-package=kivy --include-package=pygments src/main.py
+
+      - name: 📤 Upload do Executável
+        uses: actions/upload-artifact@v4
+        with:
+          name: Executavel-${{ matrix.os }}
+          path: ./main.exe  # Altere para `./main` no Linux
