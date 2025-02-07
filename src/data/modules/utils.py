@@ -10,6 +10,7 @@ from kivy.graphics import *
 from PIL import Image
 
 import os
+from sys import path
 
 class BarraNavegacao(BoxLayout):
     """
@@ -55,22 +56,15 @@ class BarraNavegacao(BoxLayout):
         App.get_running_app().root.current = name
 
 
+root = path[0]
 paths = {
-    "images": "./data/images/",
-    "canvas_images": "./data/images/canvas/",
-    "json": "./data/json/",
-    "canvas": "./data/json/saves/",
-    "configs": "./data/json/configs/",
+    "images": root+"/data/images/",
+    "canvas_images": root+"/data/images/canvas/",
+    "json": root+"/data/json/",
+    "canvas": root+"/data/json/saves/",
+    "configs": root+"/data/json/configs/",
     
 }
-
-
-def get_file_path(path: str, filename: str = ""):
-    
-    return paths[path] + "/" + filename
-
-
-config_path = get_file_path("configs","configs.json")
 
 def create_config():
     """cria o arquivo de config do aplicativo"""
@@ -81,6 +75,30 @@ def create_config():
     with open(config_path,"w") as file:
         json.dump(config_data,file,indent=4)
         file.close()
+
+
+
+
+def get_file_path(path: str, filename: str = ""):
+    return paths[path] + "/" + filename
+
+
+def generate_paths():
+    for path in paths.values():
+        print(path)
+        print(os.path.exists(path))
+        if not os.path.exists(path):
+            print("creating...")
+            os.makedirs(path)
+
+    if not os.path.isfile(get_file_path("configs","configs.json")):
+        create_config()
+
+config_path = get_file_path("configs","configs.json")
+
+
+
+
 
 def delete_canvas(name: str):
     """

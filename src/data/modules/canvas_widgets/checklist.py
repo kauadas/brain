@@ -77,7 +77,7 @@ class Checklist(FloatWidget):
 
         self.buttons = BoxLayout(orientation='horizontal',size_hint=(1,0.1),pos_hint={'x':0,'y':0})
         add_button = Button(text="+",size_hint=(1/3,1))
-        add_button.on_press = self.add_item_pop
+        add_button.on_press = self.add_item_pop_up
         self.buttons.add_widget(add_button)
 
         self.content.add_widget(self.buttons)
@@ -93,7 +93,7 @@ class Checklist(FloatWidget):
             self.layout.add_widget(item)
 
 
-    def add_item_pop(self, *args):
+    def add_item_pop_up(self, *args):
         pop = Popup(title="Add item",size_hint=(None,None),size=(400,400))
         layout = BoxLayout(orientation='vertical')
         pop.add_widget(layout)

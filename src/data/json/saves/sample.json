@@ -43,7 +43,7 @@
                 "import json\ndata = open(\"./data/json/atividades.json\")\n\ntext = \"# tarefas\\n\"\nfor key, value in json.load(data).items():\n\ttext += f\"{key}: {value}\\n\\n\"\n\ntext += \"![image info](https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg)\"\n\nself.set_text(text)\n\n\n",
                 1.0
             ],
-            "text": "# tarefas\nacademia: 11\n\ncompras: 11\n\nestudar: 11\n\n![image info](https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg)"
+            "text": "# tarefas\nacademia: 13\n\ncompras: 13\n\nestudar: 13\n\n![image info](https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg)"
         }
     },
     "size": [

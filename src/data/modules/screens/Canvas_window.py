@@ -99,7 +99,7 @@ class CanvasWindow(Screen):
         for canva in canvas:
             canva = canva.replace(".json","")
             button = Button(text=canva,size_hint=(1,None),height=100)
-            button.on_press = lambda x=canva: load_canvas-(x,self.canvas_layout)
+            button.on_press = lambda x=canva: load_canvas(x,self.canvas_layout)
             scroll_layout.add_widget(button)
 
         print(canvas)
