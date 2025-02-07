@@ -1,4 +1,4 @@
-name: Build Executable with Nuitka
+name: Build Executable for linux with Nuitka
 
 on: 
   workflow_dispatch:
