@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: 📥 Checkout do Repositório
@@ -32,4 +32,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Executavel-${{ matrix.os }}
-          path: ./main.exe  # Altere para `./main` no Linux
+          path: ./main.bin  # Altere para `./main` no Linux
