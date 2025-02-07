@@ -1,6 +1,7 @@
 name: Build Executable for windows with Nuitka
 
-on: [push, pull_request]
+on: 
+  workflow_dispatch:
 
 jobs:
   build:
