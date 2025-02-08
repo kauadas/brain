@@ -25,9 +25,14 @@ jobs:
           pip install nuitka
           pip install -r requirements.txt
 
+      - name: 🛠 Instalar MinGW-w64 e Clang
+        run: |
+          choco install mingw -y
+          choco install llvm -y
+
       - name: 🔨 Compilar com Nuitka
         run: |
-          python -m nuitka --standalone --onefile --enable-console --include-package=kivy --include-package=pygments src/main.py
+          python -m nuitka --standalone --onefile --include-package=kivy --include-package=pygments --include-package=m2r src/main.py
 
       - name: 📤 Upload do Executável
         uses: actions/upload-artifact@v4
