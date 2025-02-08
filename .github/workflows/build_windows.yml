@@ -32,7 +32,7 @@ jobs:
 
       - name: 🔨 Compilar com Nuitka
         run: |
-          python -m nuitka --standalone --onefile --include-package=kivy --include-package=pygments --include-package=m2r src/main.py
+          python -m nuitka --standalone --onefile --include-package=kivy --include-package=pygments --include-package=m2r --assume-yes-for-downloads src/main.py
 
       - name: 📤 Upload do Executável
         uses: actions/upload-artifact@v4
