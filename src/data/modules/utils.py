@@ -11,6 +11,7 @@ from PIL import Image
 
 import os
 from sys import path
+import json
 
 class BarraNavegacao(BoxLayout):
     """
@@ -47,6 +48,8 @@ class BarraNavegacao(BoxLayout):
 
     def button(self, text, janela):
         button = Button(text=text)
+        button.background_color = configs.theme["button-floatlayout"]
+        button.background_normal = ""
         button.on_press = lambda: self.go_to(janela)
         self.add_widget(button)
         return button
@@ -54,6 +57,8 @@ class BarraNavegacao(BoxLayout):
 
     def go_to(self,name,*args):
         App.get_running_app().root.current = name
+
+
 
 
 root = path[0]
@@ -66,6 +71,14 @@ paths = {
     
 }
 
+
+
+def hex_to_rgb(value):
+    value = value.lstrip('#')
+    lv = len(value)
+    return [i/255 for i in tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))]
+
+
 def create_config():
     """cria o arquivo de config do aplicativo"""
 
@@ -76,11 +89,9 @@ def create_config():
         json.dump(config_data,file,indent=4)
         file.close()
 
-
-
-
 def get_file_path(path: str, filename: str = ""):
     return paths[path] + "/" + filename
+
 
 
 def generate_paths():
@@ -91,13 +102,80 @@ def generate_paths():
             print("creating...")
             os.makedirs(path)
 
-    if not os.path.isfile(get_file_path("configs","configs.json")):
-        create_config()
-
 config_path = get_file_path("configs","configs.json")
 
 
+class Configs:
+    def __init__(self):
+        self.last_five_canvas = []
 
+        self.theme = {
+        "middle-color": [
+            0.9333333333333333,
+            0.8901960784313725,
+            0.6784313725490196
+        ],
+        "background-main": [
+            0.28627450980392155,
+            0.3333333333333333,
+            0.34901960784313724
+        ],
+        "background-canvas": [
+            0.3568627450980392,
+            0.43137254901960786,
+            0.4549019607843137
+        ],
+        "floatlayout-bar": [
+            0.7607843137254902,
+            0.6941176470588235,
+            0.611764705882353
+        ],
+        "button-floatlayout": [
+            0.6705882352941176,
+            0.611764705882353,
+            0.5411764705882353
+        ],
+        "button-floatlayout-pressed": [
+            0.7607843137254902,
+            0.6941176470588235,
+            0.611764705882353
+        ],
+        "text-color": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+
+        self.load()
+
+    def load(self):
+
+        if not os.path.isfile(config_path):
+            self.save()
+
+        with open(config_path) as file:
+            data = json.load(file)
+            file.close()
+
+        self.last_five_canvas = data["last-five-canvas"]
+        self.theme = data["theme"]
+
+
+    def save(self):
+        data = {
+            "last-five-canvas": self.last_five_canvas,
+            "theme": self.theme
+        }
+
+        if not os.path.isfile(config_path):
+            os.makedirs(config_path)
+
+        with open(config_path,"w") as file:
+            json.dump(data,file,indent=4)
+            file.close()
+
+configs = Configs()
 
 
 def delete_canvas(name: str):
@@ -108,12 +186,9 @@ def delete_canvas(name: str):
     os.remove(get_file_path("canvas",name+".json"))
     os.remove(get_file_path("canvas_images",name+".png"))
 
-    data = json.load(open(config_path))
-    if name in data["last-five-canvas"]:
-        data["last-five-canvas"].remove(name)
-        with open(config_path,"w") as file:
-            json.dump(data,file,indent=4)
-            file.close()
+    if name in configs.last_five_canvas:
+        configs.last_five_canvas.remove(name)
+        configs.save()
     
 
 def add_canvas_to_list(name: str):
@@ -123,11 +198,7 @@ def add_canvas_to_list(name: str):
 
     #create_config()
     print(name)
-    with open(config_path) as file:
-        data = json.load(file)
-        file.close()
-
-    last_canvas = data["last-five-canvas"]
+    last_canvas = configs.last_five_canvas
 
     if name in last_canvas:
         print("removing", name)
@@ -139,9 +210,7 @@ def add_canvas_to_list(name: str):
         print("removing the last element of list.")
         last_canvas.pop()
 
-    with open(config_path,"w") as file:
-        json.dump(data,file,indent=4)
-        file.close()
+    configs.save()
 
 def canvas_to_image(filename: str,canvas):
     """
@@ -193,7 +262,7 @@ def load_canvas(filename: str,canvas):
 
     for i in data["widgets"]:
         print("loading",data["widgets"][i])
-        item = types[data["widgets"][i]['type']](size_hint=(None,None))
+        item = types[data["widgets"][i]['type']](size_hint=(None,None),theme = configs.theme)
         item.from_json(data["widgets"][i])
         canvas.layout.add_widget(item)
         print(item)

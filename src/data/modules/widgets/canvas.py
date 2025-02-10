@@ -9,13 +9,14 @@ from kivy.uix.widget import Widget
 
 from kivy.graphics import *
 
-2
+
 class Canvas(Widget):
     """Quadro onde o usuário poderá visualizar os seus widgets em uma pagina customizavel."""
 
-    def __init__(self, **kwargs):
+    def __init__(self,theme: dict, **kwargs):
         super().__init__(**kwargs)
         
+        self.theme = theme
         # scroll view do quadro para poder se movimentar pelo quadro.
         self.scroll = ScrollView(size_hint=(1,1),do_scroll_x=True,do_scroll_y=True,always_overscroll=False)
         self.page_size = 1000
@@ -28,12 +29,16 @@ class Canvas(Widget):
         # botões para aumentar o tamanho do quadro
         self.plus_h = Button(text="+",size_hint=(None,None),
             pos_hint={'x':0.5,'top': 1})
+        self.plus_h.background_color = self.theme["button-floatlayout"]
+        self.plus_h.background_normal = ""
         self.plus_h.bind(on_press=self.on_plus_height)
         
         self.add_widget(self.plus_h)
 
         self.plus_w = Button(text="+",size_hint=(None,None),
             pos_hint={'right': 1,'y':0.5})
+        self.plus_w.background_color = self.theme["button-floatlayout"]
+        self.plus_w.background_normal = ""
         self.plus_w.bind(on_press=self.on_plus_width)
         
         self.add_widget(self.plus_w)
@@ -46,7 +51,7 @@ class Canvas(Widget):
 
     def style(self):
         with self.canvas.before:
-            Color(0.05, 0.05, 0.05, 1)
+            Color(*self.theme["background-canvas"])
             self.rect_0 = Rectangle(pos=self.pos, size=self.size)
     
 

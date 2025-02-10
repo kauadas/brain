@@ -10,6 +10,9 @@ from kivy.graphics import Color, Rectangle
 
 from .code_widget import Code, ErrorPopup
 
+import json
+import sys
+
 
 
 class Bar(StackLayout):
@@ -19,6 +22,7 @@ class Bar(StackLayout):
         self.orientation = 'lr-tb'
         self.size_hint = (None,None)
         self.size_base = [1,0.1]
+        theme = parent_widget.theme
         size_button = 1/6
         self.move_center = [3.5*size_button,1+size_button/2]
 
@@ -26,6 +30,8 @@ class Bar(StackLayout):
         self.add_widget(self.title)
 
         Button_remove = Button(text='X',size_hint=(size_button,1))
+        Button_remove.background_color = theme["button-floatlayout"]
+        Button_remove.background_normal = ""
         Button_remove.on_press = self.parent_widget.on_remove
 
         Button_move = Button(text='>',size_hint=(size_button,1))
@@ -89,8 +95,10 @@ class CodeUi(Code):
 
 
 class FloatWidget(Widget):
-    def __init__(self, **kwargs):
+    def __init__(self, theme: dict,**kwargs):
         super().__init__(**kwargs)
+
+        self.theme = theme
 
         # widgets
         self.code = CodeUi(self)
@@ -120,9 +128,9 @@ class FloatWidget(Widget):
     def style(self):
         self.canvas.before.clear()
         with self.canvas.before:
-            Color(0.2, 0.2, 0.2, 1)
+            Color(*self.theme["middle-color"])
             self.rect_0 = Rectangle(pos=self.pos, size=self.size)
-            Color(0.2,1,0.2,1)
+            Color(*self.theme["floatlayout-bar"])
             self.rect_1 = Rectangle(pos=self.barra.pos, size=self.barra.size)
 
     def on_update(self, *args):

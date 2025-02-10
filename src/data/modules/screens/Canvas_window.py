@@ -10,7 +10,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.graphics import *
 
 from ..widgets.canvas import Canvas
-from ..utils import types, BarraNavegacao, load_canvas, save_canvas, get_file_path
+from ..utils import types, BarraNavegacao, load_canvas, save_canvas, get_file_path, configs
 
 import os
 
@@ -43,7 +43,8 @@ class CanvasWindow(Screen):
         
         
         # quadro
-        self.canvas_layout = Canvas()
+
+        self.canvas_layout = Canvas(theme=configs.theme)
         self.supra_layout.add_widget(self.canvas_layout)
 
         
@@ -74,6 +75,7 @@ class CanvasWindow(Screen):
         for text,function in self.list_buttons.items():
             button = Button(text=text,size_hint=(0.2,1))
             button.on_press = function
+            button.background_color = configs.theme["middle-color"]
             self.buttons.add_widget(button)
 
     def load(self,*args):
@@ -135,7 +137,7 @@ class CanvasWindow(Screen):
         for type,obj in types.items():
             button = Button(text=type,size_hint=(1,None),height=100)
             pos = (self.canvas_layout.layout.width*0.4,self.canvas_layout.layout.height*0.4)
-            button.on_press = lambda x=obj: self.canvas_layout.layout.add_widget(x(size_hint=(None,None),size=(400,400),pos=pos))
+            button.on_press = lambda x=obj: self.canvas_layout.layout.add_widget(x(theme=configs.theme,size_hint=(None,None),size=(400,400),pos=pos))
             scroll_layout.add_widget(button)
     
         button_close = Button(text="close",size_hint=(1,0.1))

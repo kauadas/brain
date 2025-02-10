@@ -4,7 +4,7 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 
-from data.modules.utils import BarraNavegacao, set_canvas, get_file_path
+from data.modules.utils import BarraNavegacao, set_canvas, get_file_path, configs
 
 from PIL import Image
 import os
@@ -24,7 +24,7 @@ class Carrossel(ScrollView):
         self.add_widget(self.layout)
 
     def get_canvas(self):
-        canvas = json.load(open(get_file_path("configs","configs.json")))["last-five-canvas"]
+        canvas = configs.last_five_canvas
         return canvas
         
     def load_canvas(self):

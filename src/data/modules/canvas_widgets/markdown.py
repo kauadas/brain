@@ -13,6 +13,8 @@ from kivy.uix.boxlayout import BoxLayout
 from m2r import convert
 
 
+def rgb2hex(r,g,b):
+    return "#{:02x}{:02x}{:02x}".format(int(r*255),int(g*255),int(b*255))
 
 class Markdown(FloatWidget):
     def __init__(self, **kwargs):
@@ -20,7 +22,9 @@ class Markdown(FloatWidget):
         self.set_title("Markdown")
         self.rst = RstDocument(pos_hint={'x': 0, 'y': 0})
         
-        self.rst.colors = {"paragraph": "#33ff33","background": "#000000"}
+        paragraph = rgb2hex(*self.theme["text-color"])
+        background = rgb2hex(*self.theme["middle-color"])
+        self.rst.colors = {"paragraph": paragraph,"background": background}
 
         self.text = ""
         self.content.add_widget(self.rst)
