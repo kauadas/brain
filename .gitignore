@@ -1,3 +1,4 @@
 src/data/json/saves/**
 src/data/png/canvas/**
 portables/**
+tests/**
