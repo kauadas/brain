@@ -16,9 +16,10 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color, Rectangle
 
 class ChecklistItem(Widget):
-    def __init__(self,text: str, **kwargs):
+    def __init__(self,theme: dict,text: str, **kwargs):
         super().__init__(**kwargs)
         self.orientation = 'horizontal'
+        self.theme = theme
 
         self.check = CheckBox()
         self.check.size_hint = (None, None)
@@ -52,9 +53,9 @@ class ChecklistItem(Widget):
 
     def style(self):
         with self.canvas.before:
-            Color(0.2, 1, 0.2, 1)
+            Color(*self.theme["button-floatlayout"])
             self.rect_0 = Rectangle(pos=self.pos, size=self.size)
-            Color(1,1,1,1)
+            Color(*self.theme["middle-color"])
             self.check_rect = Rectangle(pos=self.pos, size=(self.height, self.height))
 
     def remove_item(self, *args):
@@ -68,7 +69,7 @@ class Checklist(FloatWidget):
 
         self.scroll = ScrollView(pos_hint={'x':0,'y':0.1},size_hint=(1,0.9),do_scroll_x=False,do_scroll_y=True,always_overscroll=True)
         self.content.add_widget(self.scroll)
-        self.layout = StackLayout(orientation='lr-tb',pos_hint={'x':0,'y':0},size_hint=(1,None))
+        self.layout = StackLayout(orientation='lr-tb',pos_hint={'x':0,'y':0},size_hint=(1,None),spacing = [0,10])
         self.layout.bind(minimum_height=self.layout.setter('height'))
 
         self.scroll.add_widget(self.layout)
@@ -77,18 +78,22 @@ class Checklist(FloatWidget):
 
         self.buttons = BoxLayout(orientation='horizontal',size_hint=(1,0.1),pos_hint={'x':0,'y':0})
         add_button = Button(text="+",size_hint=(1/3,1))
+        add_button.background_color = self.theme["button-floatlayout"]
+        add_button.background_normal = ""
         add_button.on_press = self.add_item_pop_up
         self.buttons.add_widget(add_button)
 
         self.content.add_widget(self.buttons)
 
         reset_button = Button(text="reset",size_hint=(1/3,1))
+        reset_button.background_color = self.theme["button-floatlayout"]
+        reset_button.background_normal = ""
         reset_button.on_press = self.reset_itens
         self.buttons.add_widget(reset_button)
 
     def add_item(self, text: str):
         if not text in self.itens:
-            item = ChecklistItem(text=text,size_hint=(1,None),height=50)
+            item = ChecklistItem(text=text,size_hint=(1,None),height=50,theme=self.theme)
             self.itens[text] = item
             self.layout.add_widget(item)
 

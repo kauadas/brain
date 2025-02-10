@@ -16,6 +16,24 @@ import os
 
 
 
+class buttons(BoxLayout):
+    def __init__(self,parent_widget, **kwargs):
+        super().__init__(**kwargs)
+        self.parent_widget = parent_widget
+        self.orientation = 'horizontal'
+
+        self.list_buttons = {"Salvar": self.parent_widget.save,"Carregar": self.parent_widget.load,
+                             "adicionar": self.parent_widget.add_item,"limpar": self.parent_widget.clear,
+                             "centralizar": self.parent_widget.go_center}
+
+        for text,function in self.list_buttons.items():
+            button = Button(text=text,size_hint=(1,1))
+            button.on_press = function
+            button.background_color = configs.theme["middle-color"]
+            button.background_normal = ""
+            button.color = configs.theme["text-color"]
+            self.add_widget(button)
+
 
 class CanvasWindow(Screen):
     """
@@ -32,14 +50,8 @@ class CanvasWindow(Screen):
         self.supra_layout.add_widget(barra)
 
         # botões
-        self.buttons = BoxLayout(orientation='horizontal',size_hint=(1,0.05))
+        self.buttons = buttons(self,size_hint=(1,0.05))
         self.supra_layout.add_widget(self.buttons)
-
-        self.list_buttons = {"Salvar": self.save,"Carregar": self.load,
-                             "adicionar": self.add_item,"limpar": self.clear,
-                             "centralizar": self.go_center}
-
-        self.load_buttons()
         
         
         # quadro
@@ -70,13 +82,6 @@ class CanvasWindow(Screen):
         
         popup.open()
 
-    def load_buttons(self,*args):
-        self.buttons.clear_widgets()
-        for text,function in self.list_buttons.items():
-            button = Button(text=text,size_hint=(0.2,1))
-            button.on_press = function
-            button.background_color = configs.theme["middle-color"]
-            self.buttons.add_widget(button)
 
     def load(self,*args):
         """

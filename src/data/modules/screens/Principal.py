@@ -3,6 +3,7 @@ from kivy.uix.label import Label
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
+from kivy.graphics import *
 
 from data.modules.utils import BarraNavegacao, set_canvas, get_file_path, configs
 
@@ -47,7 +48,7 @@ class Carrossel(ScrollView):
 
 
 
-class JanelaPrincipal(Screen):
+class MainWindow(Screen):
     """
     janela principal do aplicativo.
 
@@ -61,7 +62,7 @@ class JanelaPrincipal(Screen):
 
         # titulo
         self.title = Label(text='[b]anti-acomodação[/b]', size_hint=(1, 0.05),pos_hint={'left': 0, 'top': 0.8})
-        self.title.color = (0.2,1,0.2,1)
+        self.title.color = configs.theme["middle-color"]
         self.title.markup = True
         self.add_widget(self.title)
 
@@ -72,15 +73,22 @@ class JanelaPrincipal(Screen):
 
         self.on_pre_enter = self.carrossel.load_canvas
 
-
+        self.style()
         self.bind(size=self.on_update, pos=self.on_update)
+
+        
 
     def style(self):
         """estilo da janela."""
-        pass
+        with self.canvas.before:
+            Color(*configs.theme["background-main"])
+            self.rect_0 = Rectangle(pos=self.pos, size=self.size)
 
     def on_update(self,*args):
         self.title.font_size = self.height * 0.05
+
+        self.rect_0.size = self.size
+        self.rect_0.pos = self.pos
 
         
 

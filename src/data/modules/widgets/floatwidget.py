@@ -29,27 +29,26 @@ class Bar(StackLayout):
         self.title = Label(text="floatwidget",size_hint=(2*size_button,1))
         self.add_widget(self.title)
 
-        Button_remove = Button(text='X',size_hint=(size_button,1))
-        Button_remove.background_color = theme["button-floatlayout"]
-        Button_remove.background_normal = ""
-        Button_remove.on_press = self.parent_widget.on_remove
 
-        Button_move = Button(text='>',size_hint=(size_button,1))
-        Button_move.on_press = lambda *args : self.parent_widget.set_move(True)
-        Button_move.on_release = lambda *args : self.parent_widget.set_move(False)
-
-        Button_resize = Button(text='|',size_hint=(size_button,1))
-        Button_resize.on_press = self.parent_widget.on_start_resize
-        Button_resize.on_release = self.parent_widget.on_stop_resize
-
-        Button_code = Button(text='code',size_hint=(size_button,1))
-        Button_code.on_press = self.parent_widget.code.open
-
-        self.add_widget(Button_remove)
-        self.add_widget(Button_move)
-        self.add_widget(Button_resize)
-        self.add_widget(Button_code)
+        buttons = {"X": [self.parent_widget.on_remove,None],
+                   ">": [lambda *args : self.parent_widget.set_move(True),lambda *args : self.parent_widget.set_move(False)],
+                   "|": [self.parent_widget.on_start_resize,self.parent_widget.on_stop_resize],
+                   "code": [self.parent_widget.code.open,None]}
         
+        
+        for text,function in buttons.items():
+            button = Button(text=text,size_hint=(size_button,1))
+
+            if function[0]:
+                button.on_press = function[0]
+
+            if function[1]:
+                button.on_release = function[1]
+
+            button.background_color = theme["button-floatlayout"]
+            button.background_normal = ""
+            button.color = theme["text-color"]
+            self.add_widget(button)
 
 
     def update(self):

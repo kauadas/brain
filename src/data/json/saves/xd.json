@@ -1,5 +1,31 @@
 {
-    "widgets": {},
+    "widgets": {
+        "Checklist0": {
+            "type": "checklist",
+            "pos": [
+                7394.666666666667,
+                1510.6666666666667
+            ],
+            "size": [
+                400,
+                400
+            ],
+            "code": [
+                "",
+                1
+            ],
+            "itens": [
+                [
+                    false,
+                    "mesma coisa."
+                ],
+                [
+                    false,
+                    "s\u00f3 que bonita"
+                ]
+            ]
+        }
+    },
     "size": [
         16000,
         4000

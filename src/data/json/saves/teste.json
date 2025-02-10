@@ -1,7 +1,40 @@
 {
-    "widgets": {},
+    "widgets": {
+        "Markdown0": {
+            "type": "markdown",
+            "pos": [
+                6400.0,
+                1600.0
+            ],
+            "size": [
+                400,
+                400
+            ],
+            "code": [
+                "",
+                1
+            ],
+            "text": "# s\u00f3 pra n\u00e3o ficar vazio na tela principal."
+        },
+        "Markdown1": {
+            "type": "markdown",
+            "pos": [
+                6400.0,
+                1600.0
+            ],
+            "size": [
+                400,
+                400
+            ],
+            "code": [
+                "",
+                1
+            ],
+            "text": ""
+        }
+    },
     "size": [
-        9000,
+        16000,
         4000
     ]
 }
