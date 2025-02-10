@@ -21,8 +21,9 @@ class BarraNavegacao(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.orientation = 'horizontal'
-        self.size_hint = (1, 0.05)
+        self.size_hint = (1, 0.07)
         self.pos_hint = {'left': 0, 'top': 1}
+        self.spacing = 10
 
 
         self.style()
@@ -38,13 +39,10 @@ class BarraNavegacao(BoxLayout):
 
     def style(self):
         """cria o estilo da barra de navegação."""
-        with self.canvas.before:
-            Color(0.2, 0.2, 0.2, 1)
-            self.rect_0 = Rectangle(pos=self.pos, size=self.size)
+        pass
 
     def on_update(self, *args):
-        self.rect_0.size = self.size
-        self.rect_0.pos = self.pos
+        pass
 
     def button(self, text, janela):
         button = Button(text=text)
@@ -168,8 +166,8 @@ class Configs:
             "theme": self.theme
         }
 
-        if not os.path.isfile(config_path):
-            os.makedirs(config_path)
+        if not os.path.isfile(get_file_path("configs")):
+            os.makedirs(get_file_path("configs"))
 
         with open(config_path,"w") as file:
             json.dump(data,file,indent=4)
@@ -236,7 +234,9 @@ def save_canvas(filename: str, canvas):
     """
 
     data = {"widgets": {},
-            "size": canvas.layout.size}
+            "size": canvas.layout.size,
+            "pos": [canvas.scroll.scroll_x, canvas.scroll.scroll_y]}
+    
     for i,item in enumerate(canvas.layout.children):
         
         data["widgets"][str(type(item).__name__)+str(i)] = item.to_json()
@@ -271,8 +271,8 @@ def load_canvas(filename: str,canvas):
 
     add_canvas_to_list(filename)
 
-    canvas.scroll.scroll_x = 0.5
-    canvas.scroll.scroll_y = 0.5
+    canvas.scroll.scroll_x = data["pos"][0]
+    canvas.scroll.scroll_y = data["pos"][1]
     
 
 

@@ -21,6 +21,7 @@ class buttons(BoxLayout):
         super().__init__(**kwargs)
         self.parent_widget = parent_widget
         self.orientation = 'horizontal'
+        self.spacing = 5
 
         self.list_buttons = {"Salvar": self.parent_widget.save,"Carregar": self.parent_widget.load,
                              "adicionar": self.parent_widget.add_item,"limpar": self.parent_widget.clear,
@@ -59,6 +60,9 @@ class CanvasWindow(Screen):
         self.canvas_layout = Canvas(theme=configs.theme)
         self.supra_layout.add_widget(self.canvas_layout)
 
+        self.style()
+        self.bind(size=self.on_update, pos=self.on_update)
+
         
     def save(self,*args):
         """abre um pop-up onde o usuário pode salvar o quadro atual.
@@ -81,7 +85,6 @@ class CanvasWindow(Screen):
 
         
         popup.open()
-
 
     def load(self,*args):
         """
@@ -156,3 +159,12 @@ class CanvasWindow(Screen):
         
         self.canvas_layout.scroll.scroll_x = 0.5
         self.canvas_layout.scroll.scroll_y = 0.5
+
+    def style(self):
+        with self.canvas.before:
+            Color(*configs.theme["background-canvas"])
+            self.rect_0 = Rectangle(pos=self.pos, size=self.size)
+    
+    def on_update(self,*args):
+        self.rect_0.size = self.size
+        self.rect_0.pos = self.pos

@@ -22,10 +22,12 @@ class ChecklistItem(Widget):
         self.theme = theme
 
         self.check = CheckBox()
+        self.check.color = theme["text-color"]
         self.check.size_hint = (None, None)
         self.label = Label(text=text,color=(0,0,0,1))
         self.label.size_hint = (None, None)
         self.remove = Button(text='X',size_hint=(None, None))
+        self.remove.background_color = self.theme["button-floatlayout"]
         self.remove.on_press = self.remove_item
         self.add_widget(self.check)
         self.add_widget(self.label)
