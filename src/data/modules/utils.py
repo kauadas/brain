@@ -31,11 +31,11 @@ class BarraNavegacao(BoxLayout):
 
         self.on_update()
 
-        Main_window = self.button('Principal', 'principal')
+        self.button('Principal', 'principal')
 
-        Canvas_window = self.button('Canvas', 'canvas')
-        
-        
+        self.button('Canvas', 'canvas')
+
+        self.button('Configs', 'configs')
 
     def style(self):
         """cria o estilo da barra de navegação."""
@@ -102,12 +102,7 @@ def generate_paths():
 
 config_path = get_file_path("configs","configs.json")
 
-
-class Configs:
-    def __init__(self):
-        self.last_five_canvas = []
-
-        self.theme = {
+default_theme = {
         "middle-color": [
             0.9333333333333333,
             0.8901960784313725,
@@ -145,6 +140,12 @@ class Configs:
         ]
     }
 
+class Configs:
+    def __init__(self):
+        self.last_five_canvas = []
+
+        self.theme = default_theme
+
         self.load()
 
     def load(self):
@@ -166,7 +167,7 @@ class Configs:
             "theme": self.theme
         }
 
-        if not os.path.isfile(get_file_path("configs")):
+        if not os.path.isdir(get_file_path("configs")):
             os.makedirs(get_file_path("configs"))
 
         with open(config_path,"w") as file:
