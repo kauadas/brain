@@ -29,7 +29,7 @@ class Canvas(Widget):
         # botões para aumentar o tamanho do quadro
         self.plus_h = Button(text="+",size_hint=(None,None),
             pos_hint={'x':0.5,'top': 1})
-        self.plus_h.background_color = self.theme["button-floatlayout"]
+        self.plus_h.background_color = self.theme["button-default"]
         self.plus_h.background_normal = ""
         self.plus_h.bind(on_press=self.on_plus_height)
         
@@ -37,7 +37,7 @@ class Canvas(Widget):
 
         self.plus_w = Button(text="+",size_hint=(None,None),
             pos_hint={'right': 1,'y':0.5})
-        self.plus_w.background_color = self.theme["button-floatlayout"]
+        self.plus_w.background_color = self.theme["button-default"]
         self.plus_w.background_normal = ""
         self.plus_w.bind(on_press=self.on_plus_width)
         

@@ -26,7 +26,10 @@ class Theme(BoxLayout):
             self.add_widget(text)
 
             color = ColorChooser(size_hint=(1,1))
+            color.button.background_color = self.theme["button-default"]
+            color.button.background_normal = ""
             color.set_color(value)
+            color.on_update()
             
             self.clrs_pickers[key] = color
             self.add_widget(color)

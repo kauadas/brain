@@ -30,7 +30,7 @@ class Markdown(FloatWidget):
         self.content.add_widget(self.rst)
 
         self.edit_button = Button(text="edit",pos_hint={'x': 4/6, 'y': -1/6},size_hint=(2/6,1/6))
-        self.edit_button.background_color = self.theme["button-floatlayout"]
+        self.edit_button.background_color = self.theme["button-default"]
         self.edit_button.background_normal = ""
         self.edit_button.on_press = self.on_edit
         self.content.add_widget(self.edit_button)

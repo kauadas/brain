@@ -45,7 +45,7 @@ class Bar(StackLayout):
             if function[1]:
                 button.on_release = function[1]
 
-            button.background_color = theme["button-floatlayout"]
+            button.background_color = theme["button-default"]
             button.background_normal = ""
             button.color = theme["text-color"]
             self.add_widget(button)

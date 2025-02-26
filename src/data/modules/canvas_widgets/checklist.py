@@ -27,7 +27,7 @@ class ChecklistItem(Widget):
         self.label = Label(text=text,color=(0,0,0,1))
         self.label.size_hint = (None, None)
         self.remove = Button(text='X',size_hint=(None, None))
-        self.remove.background_color = self.theme["button-floatlayout"]
+        self.remove.background_color = self.theme["button-default"]
         self.remove.on_press = self.remove_item
         self.add_widget(self.check)
         self.add_widget(self.label)
@@ -55,7 +55,7 @@ class ChecklistItem(Widget):
 
     def style(self):
         with self.canvas.before:
-            Color(*self.theme["button-floatlayout"])
+            Color(*self.theme["button-default"])
             self.rect_0 = Rectangle(pos=self.pos, size=self.size)
             Color(*self.theme["middle-color"])
             self.check_rect = Rectangle(pos=self.pos, size=(self.height, self.height))
@@ -80,7 +80,7 @@ class Checklist(FloatWidget):
 
         self.buttons = BoxLayout(orientation='horizontal',size_hint=(1,0.1),pos_hint={'x':0,'y':0})
         add_button = Button(text="+",size_hint=(1/3,1))
-        add_button.background_color = self.theme["button-floatlayout"]
+        add_button.background_color = self.theme["button-default"]
         add_button.background_normal = ""
         add_button.on_press = self.add_item_pop_up
         self.buttons.add_widget(add_button)
@@ -88,7 +88,7 @@ class Checklist(FloatWidget):
         self.content.add_widget(self.buttons)
 
         reset_button = Button(text="reset",size_hint=(1/3,1))
-        reset_button.background_color = self.theme["button-floatlayout"]
+        reset_button.background_color = self.theme["button-default"]
         reset_button.background_normal = ""
         reset_button.on_press = self.reset_itens
         self.buttons.add_widget(reset_button)

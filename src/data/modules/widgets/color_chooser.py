@@ -35,27 +35,51 @@ class ColorChooserPopup(Popup):
 
         self.button.on_press = self.dismiss
 
+        with self.canvas.after:
+            Color(1,1,1,1)
+            self.rect_0 = Rectangle(pos=self.pos, size=self.size)
+            self.color = Color(0,0,0,1)
+            self.rect_1 = Rectangle(pos=[self.pos[0]+self.size[0],self.pos[1]], size=[self.size[0]*0.45,self.size[1]*0.45])
+
+        self.bind(size=self.on_update, pos=self.on_update)
+        self.on_update()
+
+        self.red.bind(value=self.on_update)
+        self.green.bind(value=self.on_update)
+        self.blue.bind(value=self.on_update)
+
+
+        
+
     def get_color(self):
-        return [self.red.value/255,self.green.value/255,self.blue.value/255]
+        return [self.red.value/255,self.green.value/255,self.blue.value/255,1]
     
     def set_color(self,color):
         self.red.value = color[0]*255
         self.green.value = color[1]*255
         self.blue.value = color[2]*255
+        self.color.rgba = [self.red.value/255,self.green.value/255,self.blue.value/255,1]
+
+    def on_update(self,*args):
+        self.color.rgba = [self.red.value/255,self.green.value/255,self.blue.value/255,1]
+        self.rect_1.pos = self.pos[0]+self.size[0]*1.025,self.pos[1]+self.size[0]*0.025
+        self.rect_1.size = self.size[0]*0.45,self.size[1]*0.90
+        self.rect_0.size = self.size[0],self.size[1]
+        self.rect_0.pos = self.pos[0]+self.size[0], self.pos[1]
 
 class ColorChooser(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.color_chooser = ColorChooserPopup(size_hint=(0.5,0.5))
-        self.color = [0,0,0]
+        self.popup = ColorChooserPopup(size_hint=(0.5,0.5))
+        self.color = [0,0,0,1]
 
         self.style()
 
         self.button = Button(text="Choose Color",size_hint=(None,1))
-        self.button.on_press = self.color_chooser.open
+        self.button.on_press = self.popup.open
         self.add_widget(self.button)
 
-        self.color_chooser.bind(on_dismiss=self.on_dismiss)
+        self.popup.bind(on_dismiss=self.on_dismiss)
         self.bind(size=self.on_update, pos=self.on_update)
 
         self.on_update()
@@ -63,7 +87,8 @@ class ColorChooser(BoxLayout):
         
 
     def on_dismiss(self,*args):
-        self.color = self.color_chooser.get_color()
+        self.color = self.popup.get_color()
+        print(self.color)
         self.on_update()
 
     def style(self):
@@ -74,10 +99,7 @@ class ColorChooser(BoxLayout):
             self.rect_1 = Rectangle(pos=self.pos, size=self.size)
             
     def on_update(self,*args):
-        self.color_graphic.rgba = self.color+[1]
-
-        size_1 = 0.6
-        size_0 = 0.4
+        self.color_graphic.rgba = self.color
         
         self.rect_0.size = self.size[0]*0.5,self.size[1]
         self.rect_0.pos = self.pos[0]+self.size[0]*0.5,self.pos[1]
@@ -88,6 +110,6 @@ class ColorChooser(BoxLayout):
         self.button.width = self.size[0]*0.5
 
     def set_color(self,color):
-        self.color = color
-        self.color_chooser.set_color(color)
+        self.color = color+[1]
+        self.popup.set_color(color)
         self.on_update()

@@ -46,7 +46,7 @@ class BarraNavegacao(BoxLayout):
 
     def button(self, text, janela):
         button = Button(text=text)
-        button.background_color = configs.theme["button-floatlayout"]
+        button.background_color = configs.theme["button-default"]
         button.background_normal = ""
         button.on_press = lambda: self.go_to(janela)
         self.add_widget(button)
@@ -123,12 +123,12 @@ default_theme = {
             0.6941176470588235,
             0.611764705882353
         ],
-        "button-floatlayout": [
+        "button-default": [
             0.6705882352941176,
             0.611764705882353,
             0.5411764705882353
         ],
-        "button-floatlayout-pressed": [
+        "button-default-pressed": [
             0.7607843137254902,
             0.6941176470588235,
             0.611764705882353
