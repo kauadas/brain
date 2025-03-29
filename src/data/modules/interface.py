@@ -20,7 +20,7 @@ class Aplicativo(App):
     """
     classe principal do aplicativo."""
     def build(self):
-        self.title = "anti-acomodação"
+        self.title = "Virtuous Sparrow"
         janelas = Janelas()
         janelas.add_widget(MainWindow(name='principal'))
         self.canvas_window = CanvasWindow(name='canvas')

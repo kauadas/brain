@@ -1,0 +1,57 @@
+{
+    "widgets": {
+        "Markdown0": {
+            "type": "markdown",
+            "pos": [
+                1071.4758184927482,
+                1708.857384400318
+            ],
+            "size": [
+                528.8985968695747,
+                625.0547220920141
+            ],
+            "code": [
+                "import json\ndata = open(\"./data/json/atividades.json\")\n\ntext = \"# tarefas\\n\"\nfor key, value in json.load(data).items():\n\ttext += f\"{key}: {value}\\n\\n\"\n\ntext += \"![image info](https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg)\"\n\nself.set_text(text)\n\n\n",
+                1.0
+            ],
+            "text": "# tarefas\nacademia: 18\n\ncompras: 18\n\nestudar: 18\n\n![image info](https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg)"
+        },
+        "Checklist1": {
+            "type": "checklist",
+            "pos": [
+                1822.125,
+                1663.2125
+            ],
+            "size": [
+                325.5,
+                601.6500000000001
+            ],
+            "code": [
+                "import json\n\nfile = \"./data/json/atividades.json\"\ndata = json.load(open(file))\n\nfinal = 0\nfor item, obj in self.itens.items():\n\tif obj.check.active:\n\t\tfinal += 1\n\t\tdata[item] += 1\n\nif final/len(self.itens) > 0.7:\n\tjson.dump(data,open(file,\"w\"))\n\tself.reset_itens()",
+                1.0
+            ],
+            "itens": [
+                [
+                    false,
+                    "compras"
+                ],
+                [
+                    false,
+                    "academia"
+                ],
+                [
+                    false,
+                    "estudar"
+                ]
+            ]
+        }
+    },
+    "size": [
+        4000,
+        4000
+    ],
+    "pos": [
+        0.5,
+        0.5
+    ]
+}

@@ -2,7 +2,7 @@ from kivy.uix.screenmanager import Screen
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
-from kivy.uix.textinput import TextInput
+from kivy.uix.stacklayout import StackLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
@@ -11,6 +11,9 @@ from kivy.graphics import *
 
 from data.modules.utils import BarraNavegacao, configs, get_file_path, default_theme
 from data.modules.widgets.color_chooser import ColorChooser
+from data.modules.widgets.file_explorer import FileExplorer
+
+from sys import path
 
 
 class Theme(BoxLayout):
@@ -56,6 +59,26 @@ class Theme(BoxLayout):
             self.clrs_pickers[key].set_color(default_theme[key])
         configs.save()
 
+
+
+
+def load_widget():
+    popup = FileExplorer(file_chooser_options={"path": path[0]},size_hint=(0.6,0.6))
+    popup.open()
+
+    popup.on_ok = lambda popup = popup: load(popup.load_file)
+
+def load(path_file):
+    data = open(path_file).read()
+    print("p",path)
+    files_path = path[0]+"/data/modules/canvas_widgets"
+
+    with open(files_path+"/"+path_file.split("/")[-1], "w") as f:
+        f.write(data)
+        f.close()
+
+
+
 class ConfigsWindow(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -80,6 +103,14 @@ class ConfigsWindow(Screen):
 
         self.theme = Theme()
         self.layout.add_widget(self.theme)
+
+        self.load_widget = Button(text='Load widget', size_hint=(1, 0.05))
+        self.load_widget.font_size = self.height
+        self.load_widget.color = configs.theme["middle-color"]
+        self.load_widget.on_press = load_widget
+        self.layout.add_widget(self.load_widget)
+
+
 
         self.bind(size=self.on_update, pos=self.on_update)
         

@@ -31,9 +31,11 @@ class Carrossel(ScrollView):
     def load_canvas(self):
         self.layout.clear_widgets()
         canvas = self.get_canvas()
-
+        canvas_files = os.listdir(get_file_path("canvas"))
         for canva in canvas:
-            print(canva)
+            if canva+".json" not in canvas_files:
+                continue
+            
             preview = get_file_path("canvas_images",canva+".png")
 
             size = Image.open(preview).size

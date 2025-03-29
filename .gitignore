@@ -1,4 +1,4 @@
-src/data/json/saves/**
-src/data/png/canvas/**
+src/data/saves/saves/**
+src/data/images/canvas/**
 portables/**
 tests/**
