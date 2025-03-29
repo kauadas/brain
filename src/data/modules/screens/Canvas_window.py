@@ -11,6 +11,7 @@ from kivy.graphics import *
 
 from ..widgets.canvas import Canvas
 from ..utils import types, BarraNavegacao, load_canvas, save_canvas, get_file_path, configs
+from ..widgets.file_explorer import FileExplorer
 
 import os
 
@@ -68,23 +69,12 @@ class CanvasWindow(Screen):
         """abre um pop-up onde o usuário pode salvar o quadro atual.
         o usuário deve escolher um nome para o arquivo json e clicar em salvar e depois em close.
         """
-        popup = Popup(title="Salvar",size_hint=(None,None),size=(400,400))
-        layout = BoxLayout(orientation='vertical')
-        popup.add_widget(layout)
-
-        text_input = TextInput(multiline=False,size_hint=(1,0.1))
-        layout.add_widget(text_input)
-
-        button = Button(text="salvar",size_hint=(1,0.1))
-        button.on_press = lambda: save_canvas(text_input.text,self.canvas_layout)
-        layout.add_widget(button)
-
-        button_close = Button(text="close",size_hint=(1,0.1))
-        button_close.on_press = popup.dismiss
-        layout.add_widget(button_close)
-
+        popup = FileExplorer(is_save=True,file_chooser_options={"path":get_file_path("canvas")},size_hint=(0.6,0.6))
         
         popup.open()
+        
+
+        popup.on_ok = lambda popup = popup, self = self: save_canvas(popup.save_file.split("/")[-1].replace(".json",""),self.canvas_layout)
 
     def load(self,*args):
         """
@@ -92,31 +82,9 @@ class CanvasWindow(Screen):
         a função limpara o quadro atual e depois carrega o quadro escolhido.
         """
         
-        popup = Popup(title="Carregar",size_hint=(None,None),size=(400,400))
+        popup = FileExplorer(file_chooser_options={"path":get_file_path("canvas")},size_hint=(0.6,0.6))
         
-        layout = BoxLayout(orientation='vertical')
-        popup.add_widget(layout)
-
-
-        scroll = ScrollView(size_hint=(1,1),do_scroll_x=False,do_scroll_y=True,always_overscroll=True)
-        scroll_layout = StackLayout(orientation='lr-tb',size_hint=(1,None))
-        scroll_layout.bind(minimum_height=scroll_layout.setter('height'))
-
-        scroll.add_widget(scroll_layout)
-        layout.add_widget(scroll)
-
-        canvas = os.listdir(get_file_path("canvas"))
-        for canva in canvas:
-            canva = canva.replace(".json","")
-            button = Button(text=canva,size_hint=(1,None),height=100)
-            button.on_press = lambda x=canva: load_canvas(x,self.canvas_layout)
-            scroll_layout.add_widget(button)
-
-        print(canvas)
-    
-        button_close = Button(text="close",size_hint=(1,0.1))
-        button_close.on_press = popup.dismiss
-        layout.add_widget(button_close)
+        popup.on_ok = lambda popup = popup, self = self: load_canvas(popup.load_file.split("/")[-1].replace(".json",""),self.canvas_layout)
         
         popup.open()
 
