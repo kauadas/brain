@@ -11,7 +11,8 @@ else:
     file = Path(__file__)
     
 chdir(file.parent)
-print(file.parent)
+
+print("parent",file.parent)
 
 
 generate_paths()
