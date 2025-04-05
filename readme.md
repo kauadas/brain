@@ -9,3 +9,37 @@ se vocé deseja baixar o projeto, basta clicar no botão [**code**] e depois em 
 # como utilizar o projeto.
 
 leia a documentação para maiores informações.
+
+
+# metas atuais.
+
+prioridade alta (base pra outras coisas):
+
+Controle de versão para evitar problemas
+
+Login e backup (local e/ou nuvem)
+
+Sistema de eventos/mensagens entre widgets
+
+Sistema de pesquisas e filtro
+
+Editor de post-its (interface visual)
+
+
+prioridade media (expande o projeto):
+
+Categorias para quadros e post-its
+
+Notificações
+
+Estatísticas (uso, tarefas concluídas, frequência)
+
+Modo de leitura
+
+prioridade futura (salto para outros niveis):
+
+Documentação
+
+IA integration
+
+Modo diário
