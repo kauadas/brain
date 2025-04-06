@@ -85,7 +85,7 @@ class ButtonBar(FloatWidget):
     def from_json(self,data):
         super().from_json(data)
         self.reset_itens()
-        for item in data["itens"]:
+        for item in data.get("itens",[]):
             self.add_item(item)
 
     

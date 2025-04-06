@@ -64,7 +64,7 @@ class Markdown(FloatWidget):
     
     def from_json(self,data):
         super().from_json(data)
-        self.set_text(data["text"])
+        self.set_text(data.get("text",""))
 
 
 

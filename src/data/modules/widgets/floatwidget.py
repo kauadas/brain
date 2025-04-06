@@ -197,12 +197,13 @@ class FloatWidget(Widget):
         return {"type":"floatwidget","pos":self.pos,"size":self.size,"code": (self.code.code,self.code.time_trigger)}
     
     def from_json(self,data):
-        self.pos = data["pos"]
-        self.size = data["size"]
-        self.code.code = data["code"][0]
-        self.code.code_input.text = data["code"][0]
-        self.code.time_trigger = data["code"][1]
-        self.code.time_input.text = str(data["code"][1])
+        self.pos = data.get("pos",[0,0])
+        self.size = data.get("size",[100,100])
+        code = data.get("code",["", 0])
+        self.code.code = code[0]
+        self.code.code_input.text = code[0]
+        self.code.time_trigger = code[1]
+        self.code.time_input.text = str(code[1])
         self.code.start_event_code()
     
     def set_title(self,title):

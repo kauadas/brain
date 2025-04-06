@@ -137,7 +137,7 @@ class Checklist(FloatWidget):
     def from_json(self,data):
         super().from_json(data)
         self.layout.clear_widgets()
-        for item in data["itens"]:
+        for item in data.get("itens",[]):
             self.add_item(item[1])
             self.itens[item[1]].check._set_active(item[0])
 

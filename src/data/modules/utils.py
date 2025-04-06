@@ -157,8 +157,8 @@ class Configs:
             data = json.load(file)
             file.close()
 
-        self.last_five_canvas = data["last-five-canvas"]
-        self.theme = data["theme"]
+        self.last_five_canvas = data.get("last-five-canvas",[])
+        self.theme = data.get("theme",default_theme)
 
 
     def save(self):
@@ -261,19 +261,32 @@ def load_canvas(filename: str,canvas):
 
     canvas.layout.clear_widgets()
 
-    for i in data["widgets"]:
-        print("loading",data["widgets"][i])
-        item = types[data["widgets"][i]['type']](size_hint=(None,None),theme = configs.theme)
-        item.from_json(data["widgets"][i])
-        canvas.layout.add_widget(item)
-        print(item)
+    canvas_size = data.get("size",[4000,4000])
+    canvas_cam_pos = data.get("pos",[0.5,0.5])
+    canvas_widgets = data.get("widgets",{})
 
-    canvas.layout.size = data["size"]
+
+    for key,value in canvas_widgets.items():
+        print("loading",key)
+        type_ = value.get("type", None)
+
+        if not type_ or type_ not in types:
+            continue
+
+        
+
+        item = types[type_](size_hint=(None,None),theme = configs.theme)
+
+        item.from_json(value)
+
+        canvas.layout.add_widget(item)
+
+    canvas.layout.size = canvas_size
 
     add_canvas_to_list(filename)
 
-    canvas.scroll.scroll_x = data["pos"][0]
-    canvas.scroll.scroll_y = data["pos"][1]
+    canvas.scroll.scroll_x = canvas_cam_pos[0]
+    canvas.scroll.scroll_y = canvas_cam_pos[1]
     
 
 

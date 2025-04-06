@@ -13,9 +13,6 @@ from ..widgets.canvas import Canvas
 from ..utils import types, BarraNavegacao, load_canvas, save_canvas, get_file_path, configs
 from ..widgets.file_explorer import FileExplorer
 
-import os
-
-
 
 class buttons(BoxLayout):
     def __init__(self,parent_widget, **kwargs):
